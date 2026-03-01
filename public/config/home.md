@@ -1,11 +1,28 @@
-- Welcome to your new personal blog. <br>This site is powered by a lightweight, responsive system <br>designed for researchers and developers who want to focus on documenting and writing.
-- **Why tablog?** <br>No database, no heavy backend—just your files and a sleek, minimal shell. <br>Native LaTeX support for technical and academic research. <br>A refreshing color palette that changes during navigation.
-- Follow these steps to customize your site:
+# TABlog – Проектен Каталог
 
-| Task | File Path |
-| --- | --- |
-| Modify Global Config | `config/app.json` |
-| Update Homepage Content | `config/home.md` |
-| Import Markdown Posts | `markdowns/*.md` |
+## Какво е това?
+- Markdown-*първо* описание на всички мои инфраструктурни и служебни проекти.
+- Всеки проект живее в `petkan.projects` (PostgreSQL) и има:
+  - `_posts/...` файл за блога (тагове, статус, инфраструктура).
+  - `public/markdowns/<slug>/…` за пълното описание.
 
-- Explore [GitHub Repository](https://github.com/tropical-algae/TABlog) for more details. <br>Now, go ahead and begin sharing your insights and findings!
+## Как работи генераторът?
+1. **Крон** (`/opt/vault/scripts/tablog_sync.sh`) се пуска на всеки 6 часа.
+2. Скриптът:
+   - Чете таблицата `petkan.projects`.
+   - Генерира/обновява `_posts/*.md` и `public/markdowns/...`.
+   - Commit & push към GitHub (`Pacobg/TABlog`).
+3. Coolify build (Dockerfile.coolify) прави `npm ci && npm run build` и копира `dist` в nginx.
+4. Сайтът се сервира на `http://192.168.1.13:3111` (вътрешно), а външен достъп, ако трябва, минава през Pangolin или друг reverse proxy.
+
+## Как добавям нов проект?
+- Въвеждам нов ред в `petkan.projects` (slug, статус, doc_path, notes…).
+- Скриптът го хваща при следващия cron/push.
+- Автоматично се появява тук, без ръчни промени в репото.
+
+## Какво предстои?
+- (пример) Добавяне на филтри по „Служебни/Лични".
+- (пример) Визуализации на timeline/етапи.
+- (пример) Публична версия през Pangolin.
+
+> Ако нещо се "чупи", най-често е нужна една команда `docker logs …` или redeploy през Coolify. Всичко останало е автоматизирано.
