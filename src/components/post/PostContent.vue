@@ -18,7 +18,7 @@ const props = defineProps({
 })
 
 const route = useRoute()
-const rawRoute = computed(() => ({ name: 'PostRaw', params: { title: route.params.title } }))
+const rawRoute = computed(() => ({ name: 'PostRaw', params: { title: props.title } }))
 </script>
 
 <style scoped>
