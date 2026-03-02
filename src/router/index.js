@@ -76,9 +76,7 @@ const routes = [
     components: {
       default: MarkdownRaw
     },
-    props: {
-      default: true
-    },
+    props: true,
     meta: {
       "layout": "default",
       "title": 'Raw Markdown - ' + siteTitle
