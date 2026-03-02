@@ -4,6 +4,7 @@ import { usePostStore } from '@/stores/post'
 
 const Home = () => import("@/views/Home.vue")
 const Post = () => import("@/views/Post.vue")
+const MarkdownRaw = () => import("@/views/MarkdownRaw.vue")
 const Archive = () => import("@/views/Archive.vue")
 const Timeline = () => import("@/views/Timeline.vue")
 const PostNavigator = () => import("@/components/post/PostNavigator.vue")
@@ -57,6 +58,30 @@ const routes = [
     meta: {
       "layout": "default",
       "title": 'Post - ' + siteTitle
+    },
+    beforeEnter: async (to, from, next) => {
+      const postStore = usePostStore()
+      try {
+        await postStore.fetchPostAndParse(to.params.title)
+        next()
+      } catch (err) {
+        console.error(err)
+        next()
+      }
+    },
+  },
+  {
+    path: "/post/:title/raw",
+    name: "PostRaw",
+    components: {
+      default: MarkdownRaw
+    },
+    props: {
+      default: true
+    },
+    meta: {
+      "layout": "default",
+      "title": 'Raw Markdown - ' + siteTitle
     },
     beforeEnter: async (to, from, next) => {
       const postStore = usePostStore()
